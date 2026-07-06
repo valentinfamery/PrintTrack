@@ -3,12 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 
-class PrinterTab : UserControl
+
+class PrintersTab : TabItem
 {
    
 
-    public PrinterTab()
+    public PrintersTab()
     {
+        Header = "Printer";
         Content = new TextBlock
             {
                 Margin = new Thickness(5),
