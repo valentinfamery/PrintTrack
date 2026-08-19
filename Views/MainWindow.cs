@@ -11,20 +11,14 @@ public partial class MainWindow : Window
 {
     public MainWindow()
         {
+            
+
             // Configuration de la fenêtre
-            Title = "Test Onglets C#";
-            //Width = 400;
-            //Height = 300;
-
-        
-
-
-            this.Content = new TabControl()
-    .Margin(10)
-    .Items(
-        new TabItem { Header = "Printers", Content = new PrintersView() },
-        new TabItem { Header = "Settings", Content = new SettingsView() }
-    );
+            Title = "PrintTrack";
+            Icon = new WindowIcon("Assets/avalonia-logo.ico");
+            MinHeight = 850;
+            MinWidth = 1500;
+            Content = new MainView();
         }
     
 }

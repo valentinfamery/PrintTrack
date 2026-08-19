@@ -1,16 +1,25 @@
-namespace SharpPrintSupply.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Printer
+namespace PrintTrack.Models;
+
+public partial class Printer(
+    string site,
+    string categorie,
+    string adresseIP,
+    string numeroetiquette,
+    string marque,
+    string modele,
+    string numserie,
+    string adresseMAC,
+    string concatenerLocation) : ObservableObject
 {
-        public string Site { get; set; } = string.Empty;
-        public string Categorie { get; set; } = string.Empty;
-        public string AdresseIP { get; set; } = string.Empty;
-        public string Numeroetiquette { get; set; } = string.Empty;
-        public string Marque { get; set; } = string.Empty;
-        public string Modele { get; set; } = string.Empty;
-        public string Numserie { get; set; } = string.Empty;
-        public string AdresseMAC { get; set; } = string.Empty;
-        public string Batiment { get; set; } = string.Empty;
-        public string Etage { get; set; } = string.Empty;
-        public string Bureau { get; set; } = string.Empty;
+    [ObservableProperty] private string  _site = site;
+    [ObservableProperty] private string _categorie = categorie;
+    [ObservableProperty] private string _adresseIP = adresseIP;
+    [ObservableProperty] private string _numeroetiquette = numeroetiquette;
+    [ObservableProperty] private string _marque = marque;
+    [ObservableProperty] private string _modele = modele;
+    [ObservableProperty] private string _numserie = numserie;
+    [ObservableProperty] private string _adresseMAC = adresseMAC;
+    [ObservableProperty] private string _concatenerLocation = concatenerLocation;
 }
