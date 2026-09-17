@@ -1,6 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Themes.Fluent;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using PrintTrack.ViewModels;
 using PrintTrack.Views;
 using System;
 
@@ -21,7 +24,13 @@ class Program
         app.Styles.Add(new FluentTheme());
 
         var window = new MainWindow();
+
+
+
         window.Show();
+
+        window.Bind(Window.HeightProperty,new Binding(nameof(MainViewModel.WindowHeight)));
+        window.Bind(Window.WidthProperty,new Binding(nameof(MainViewModel.WindowWidth)));
         app.Run(window);
     }
 }

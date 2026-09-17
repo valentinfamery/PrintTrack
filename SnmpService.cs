@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,16 +9,16 @@ public class SnmpService{
 
     }
 
-    public static async Task<List<Variable>> getOperation(string ip){
-       var result = Messenger.Get(VersionCode.V1,
+    public static List<Variable> GetOperation(string ip){
+       var result = Messenger.Get(VersionCode.V2,
                            new IPEndPoint(IPAddress.Parse(ip), 161),
                            new OctetString("public"),
-                           [new Variable(new ObjectIdentifier("1.3.6.1.2.1.1.1.0"))],
+                           [new Variable(new ObjectIdentifier("1.3.6.1.2.1.25.3.2.1.5.1"))],
                            1000);
        return (List<Variable>)result;
     }
 
-    public static async Task<List<Variable>> walkOperation(string ip){
+    public static List<Variable> WalkOperation(string ip){
             var result = new List<Variable>();
             Messenger.Walk(VersionCode.V1,
                new IPEndPoint(IPAddress.Parse(ip), 161),

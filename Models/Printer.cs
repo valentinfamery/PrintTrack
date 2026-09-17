@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace PrintTrack.Models;
 
 public partial class Printer(
-    string site,
+    string grandSite,
     string categorie,
     string adresseIP,
     string numeroetiquette,
@@ -11,9 +11,10 @@ public partial class Printer(
     string modele,
     string numserie,
     string adresseMAC,
-    string concatenerLocation) : ObservableObject
+    string concatenerLocation,
+    string status) : ObservableObject
 {
-    [ObservableProperty] private string  _site = site;
+    [ObservableProperty] private string  _site = grandSite;
     [ObservableProperty] private string _categorie = categorie;
     [ObservableProperty] private string _adresseIP = adresseIP;
     [ObservableProperty] private string _numeroetiquette = numeroetiquette;
@@ -22,4 +23,6 @@ public partial class Printer(
     [ObservableProperty] private string _numserie = numserie;
     [ObservableProperty] private string _adresseMAC = adresseMAC;
     [ObservableProperty] private string _concatenerLocation = concatenerLocation;
+
+    [ObservableProperty] private string _status = status;
 }

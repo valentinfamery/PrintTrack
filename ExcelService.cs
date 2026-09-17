@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using PrintTrack.Models;
+using PrintTrack.ViewModels;
 using static DocumentFormat.OpenXml.Packaging.SpreadsheetDocument;
 
 public class ExcelService{
+
+    
     public ExcelService(){
 
     }
@@ -55,7 +58,7 @@ public class ExcelService{
 
             // Exemple de mapping basé sur l'index des colonnes :
             // Colonne 0 (A) = Nom/IP, Colonne 1 (B) = Modèle, Colonne 2 (C) = Emplacement...
-            string Site = GetCellValue(cells.ElementAtOrDefault(1), sst);
+            string GrandSite = GetCellValue(cells.ElementAtOrDefault(0), sst);
             string Categorie = GetCellValue(cells.ElementAtOrDefault(2), sst);
             string AdresseIP = GetCellValue(cells.ElementAtOrDefault(3), sst);
             string Numeroetiquette = GetCellValue(cells.ElementAtOrDefault(4), sst);
@@ -66,31 +69,53 @@ public class ExcelService{
             string ConcatenerLocation = GetCellValue(cells.ElementAtOrDefault(12), sst);
 
             // Ignore les lignes vides si nécessaire
-            if (string.IsNullOrWhiteSpace(Site) && string.IsNullOrWhiteSpace(AdresseIP))
+            if (string.IsNullOrWhiteSpace(GrandSite) && string.IsNullOrWhiteSpace(AdresseIP))
                 continue;
 
+            string ipHost = AdresseIP.Replace("https://", "");
+
+            //Console.WriteLine(ipHost);
+
             // Instanciation et ajout de l'imprimante
-            Printer printer = new Printer(
-                Site,
+            Printer printer = new(
+                GrandSite,
                 Categorie,
-                AdresseIP,
+                ipHost,
                 Numeroetiquette,
                 Marque,
                 Modele,
                 Numserie,
                 AdresseMAC,
-                ConcatenerLocation
+                ConcatenerLocation,
+                ""
             );
 
-            Console.WriteLine(printer.Numeroetiquette.ToString());
+            //Console.WriteLine(printer.Numeroetiquette.ToString());
 
-            if (AdresseIP != "RETIRE"){
+            if (AdresseIP != "RETIRE" && AdresseIP != "COLIMO" && AdresseIP != "HORS RESEAU"){
 
             printers.Add(printer);
 
             }
 
         }
+
+            List<string>? siteList = [.. printers
+            .Select(p => p.Site)
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Distinct()
+            .OrderBy(s => s)];
+
+        // Optionnel : Ajouter un choix pour tout afficher
+        siteList.Insert(0, "Tous les sites");
+
+        foreach(string site in siteList)
+            {
+                MainViewModel.Instance.GrandSites.Add(site);
+                //Console.WriteLine(site);
+            }
+
+        
 
 
             return printers;

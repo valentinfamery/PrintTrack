@@ -7,14 +7,14 @@ public class AppSettings
     public string PrintersXlsxPath { get; set; } = "";
 }
 
-public class SettingsService
+public static class SettingsService
 {
     private static readonly string SettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "PrintTrack",
         "settings.json");
 
-    public AppSettings Load()
+    public static AppSettings Load()
     {
         if (!File.Exists(SettingsPath))
             return new AppSettings();
@@ -23,7 +23,7 @@ public class SettingsService
         return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
     }
 
-    public void Save(AppSettings settings)
+    public static void Save(AppSettings settings)
     {
         var directory = Path.GetDirectoryName(SettingsPath)!;
         Directory.CreateDirectory(directory);
