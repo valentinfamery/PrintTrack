@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Markup.Declarative;
 using Avalonia.Themes.Fluent;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using PrintTrack.ViewModels;
@@ -15,6 +16,7 @@ class Program
     {
         AppBuilder.Configure<Application>()
                   .UsePlatformDetect()
+                  .UseHotReload()
                   .Start(AppMain, args);
     }
 
@@ -25,12 +27,8 @@ class Program
 
         var window = new MainWindow();
 
-
-
         window.Show();
 
-        window.Bind(Window.HeightProperty,new Binding(nameof(MainViewModel.WindowHeight)));
-        window.Bind(Window.WidthProperty,new Binding(nameof(MainViewModel.WindowWidth)));
         app.Run(window);
     }
 }

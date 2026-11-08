@@ -30,7 +30,7 @@ public static class StorageService
         // Pour tester, on l'affiche dans la console
         Console.WriteLine($"Chemin du fichier : {filePath}");
 
-     
+
 
 
             // Open reading stream from the first file.

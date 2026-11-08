@@ -42,6 +42,8 @@ public static class RefreshService
 
             stopwatch.Stop();
             Console.WriteLine($"Temps écoulé : {stopwatch.ElapsedMilliseconds} ms");
+
+            MainViewModel.Instance?.InfoList = $"{printers.Count} imprimantes scannées en {stopwatch.ElapsedMilliseconds} ms";
         }
         else
         {
@@ -54,16 +56,12 @@ public static class RefreshService
         try
         {
            
-            var result = SnmpService.GetOperation(printer.AdresseIP);
+            var result = 
+            //SnmpService.GetOperation(printer.AdresseIP)
+            SnmpService.BulkOperation(printer.AdresseIP);
+            ;
 
-            if (result?.FirstOrDefault() != null)
-            {
-                var statusValue = result[0].ToString();
-                if (!string.IsNullOrWhiteSpace(statusValue))
-                {
-                    printer.Status = statusValue;
-                }
-            }
+            ParseService.ParsePrinterSnmpData(printer,result);
         }
         catch (Exception e)
         {

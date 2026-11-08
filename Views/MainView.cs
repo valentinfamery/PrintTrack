@@ -11,6 +11,8 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Declarative;
 using Avalonia.Media;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using PrintTrack.Models;
 using PrintTrack.ViewModels;
 
@@ -18,7 +20,7 @@ using PrintTrack.ViewModels;
 
 
 namespace PrintTrack.Views;
-    
+
 
 public class MainView : UserControl
 {
@@ -28,7 +30,7 @@ public class MainView : UserControl
     private readonly Button _buttonChargerCMDB;
     private readonly Button _refreshAll;
     private readonly TableView _tableView;
-    private readonly ScrollViewer _scrollViewer;
+    private readonly ScrollViewer _scrollViewer2;
     private readonly TextBlock _infosPrintersChargedCMDB;
     private readonly ComboBox _comboBox;
 
@@ -41,44 +43,43 @@ public class MainView : UserControl
 
 
 
-        
 
-      
 
-        _infosPrintersChargedCMDB = new TextBlock()
-        {
-            Text=""
-        };
+
+
+        _infosPrintersChargedCMDB = new TextBlock();
+
+        _infosPrintersChargedCMDB.Bind(TextBlock.TextProperty,new Binding(nameof(MainViewModel.InfoList)));
 
 
         _stackPanel = new StackPanel()
         {
             Spacing = 5,
-            Background = Brushes.GhostWhite
+            Background = Brushes.GhostWhite,
+            Margin = new Thickness(10),
         };
 
         _buttonPanel = new StackPanel()
         {
+            Spacing = 5,
             Orientation = Orientation.Horizontal,
-            Spacing = 5, 
-            Margin = new Thickness(10),
         };
 
-        
+
 
         _buttonChargerCMDB = new Button()
         {
             Content = "ChargerCMDB",
         };
 
-        _buttonChargerCMDB.Click +=  OpenFileButton_Clicked!;
+        _buttonChargerCMDB.Click +=  LoadCMDBOnClick!;
 
         _refreshAll = new Button()
         {
             Content = "Rafraîchir tout"
         };
 
-        _refreshAll.Click += RefreshAllClick!;
+        _refreshAll.Click += RefreshAllOnClick!;
 
         _comboBox = new ComboBox();
 
@@ -87,13 +88,16 @@ public class MainView : UserControl
         // Lier l'élément sélectionné (SelectedItem -> SelectedOption)
         _comboBox.Bind(SelectingItemsControl.SelectedItemProperty, new Binding(nameof(MainViewModel.Filter)));
 
-       
-       
 
 
-        _tableView = new TableView().CanUserResizeColumns(false).ItemsSource(mainViewModel.FilteredPrinters)
-        .VerticalAlignment(VerticalAlignment.Stretch)
-        ;
+
+
+        _tableView = new TableView(){SelectionMode=SelectionMode.Single}.CanUserResizeColumns(false);
+
+
+        _tableView.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(MainViewModel.FilteredPrinters)));
+
+
 
 
         var cellTemplate = new FuncDataTemplate<Printer>((item, namescope) =>
@@ -108,14 +112,15 @@ public class MainView : UserControl
 
     // Couleurs demandées pour les 4 cubes
     var colors = new[] { Colors.Black, Colors.Cyan, Colors.Magenta, Colors.Yellow };
-    
+
+    if(item.Consommables.Any() != false)
     // Exemple : supposons que `item.Pourcentages` soit un tableau/liste de 4 double (ex: [50, 20, 80, 10])
     // Tu peux adapter la source de données selon tes besoins.
     for (int i = 0; i < 4; i++)
     {
-       
-        Color couleurFond = colors[i];
-        
+
+        Avalonia.Media.Color couleurFond = colors[i];
+
         // Un cube (Border) contenant le texte du pourcentage
         var cube = new Border
         {
@@ -127,7 +132,7 @@ public class MainView : UserControl
             CornerRadius = new CornerRadius(4),
             Child = new TextBlock
             {
-                Text = $"10%",
+                Text = item.Consommables[i].Name + item.Consommables[i].Percentage.ToString(),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontSize = 11,
@@ -137,62 +142,73 @@ public class MainView : UserControl
             }
         };
 
+
         row.Children.Add(cube);
     }
+
+
 
     return row;
 });
 
+
+
+
         _tableView.Columns([
-            new TableViewColumn().Header("Site").Binding(new Binding(nameof(Printer.Site))),
-            new TableViewColumn().Header("AdresseIP").Binding(new Binding(nameof(Printer.AdresseIP))),
-            new TableViewColumn().Header("Numeroetiquette").Binding(new Binding(nameof(Printer.Numeroetiquette))),
-            new TableViewColumn().Header("Statut").Binding(new Binding(nameof(Printer.Status))),
-            new TableViewColumn().Header("Consommables").CellTemplate(cellTemplate),
-            
+            new TableViewColumn().Header("Site").Binding(new Binding(nameof(Printer.Site))).Width(new GridLength(200, GridUnitType.Pixel)),
+            new TableViewColumn().Header("AdresseIP").Binding(new Binding(nameof(Printer.AdresseIP))).Width(new GridLength(100, GridUnitType.Pixel)),
+            new TableViewColumn().Header("Numeroetiquette").Binding(new Binding(nameof(Printer.Numeroetiquette))).Width(new GridLength(100, GridUnitType.Pixel)),
+            new TableViewColumn().Header("Statut").Binding(new Binding(nameof(Printer.Status))).Width(new GridLength(100, GridUnitType.Pixel)),
+            new TableViewColumn().Header("Toner").CellTemplate(cellTemplate).Width(new GridLength(200, GridUnitType.Pixel)),
 
             //new TableViewColumn().Header("Categorie").Binding(new Binding(nameof(Printer.Categorie))),
-            
+
             //new TableViewColumn().Header("Marque").Binding(new Binding(nameof(Printer.Marque))),
-            new TableViewColumn().Header("Modele").Binding(new Binding(nameof(Printer.Modele))),
-            new TableViewColumn().Header("Numserie").Binding(new Binding(nameof(Printer.Numserie))),
-            new TableViewColumn().Header("AdresseMAC").Binding(new Binding(nameof(Printer.AdresseMAC))),
-            new TableViewColumn().Header("ConcatenerLocation").Width(new GridLength(500)).Binding(new Binding(nameof(Printer.ConcatenerLocation))),
+            new TableViewColumn().Header("Modele").Binding(new Binding(nameof(Printer.Modele))).Width(new GridLength(100, GridUnitType.Pixel)),
+            new TableViewColumn().Header("Numserie").Binding(new Binding(nameof(Printer.Numserie))).Width(new GridLength(150, GridUnitType.Pixel)),
+            new TableViewColumn().Header("AdresseMAC").Binding(new Binding(nameof(Printer.AdresseMAC))).Width(new GridLength(150, GridUnitType.Pixel)),
+            new TableViewColumn().Header("ConcatenerLocation").Binding(new Binding(nameof(Printer.ConcatenerLocation))).Width(new GridLength(700, GridUnitType.Pixel)),
         ]
         );
 
-        
-        
 
-       
+        _tableView.Bind(TableView.SelectedItemProperty,new Binding(nameof(MainViewModel.SelectedPrinter)));
 
-        _scrollViewer = new ScrollViewer()
+
+
+
+
+        _scrollViewer2 = new ScrollViewer()
         {
             HorizontalScrollBarVisibility = ScrollBarVisibility.Visible,
             VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
-            Width = 1500* 0.99,
-            Height = 850* 0.4,
-            Content = _tableView
+            BorderBrush = Brushes.Black,
+            BorderThickness = new Thickness(2),
+            Content = new DetailView(),
         };
+
+
 
 SizeChanged += (sender, e) =>
 {
     // Fixe la taille de l'élément à 60% de la largeur et 40% de la hauteur de la fenêtre
-    _scrollViewer.Width = e.NewSize.Width * 0.99;
-    _scrollViewer.Height = e.NewSize.Height * 0.4;
+    _tableView.Width = e.NewSize.Width * 0.99;
+    _tableView.Height = e.NewSize.Height * 0.4;
+    _scrollViewer2.Width = e.NewSize.Width * 0.99;
+    _scrollViewer2.Height = e.NewSize.Height * 0.4;
 };
 
 
         _buttonPanel.Children(_buttonChargerCMDB,_refreshAll);
 
-        _stackPanel.Children(_buttonPanel,_comboBox,_scrollViewer,_infosPrintersChargedCMDB);
-        
+        _stackPanel.Children(_buttonPanel,_comboBox,_tableView,_scrollViewer2,_infosPrintersChargedCMDB);
+
         Content = _stackPanel;
     }
 
-   
 
-    private async void OpenFileButton_Clicked(object sender, RoutedEventArgs args)
+
+    private async void LoadCMDBOnClick(object sender, RoutedEventArgs args)
     {
         var s = SettingsService.Load();
 
@@ -207,7 +223,7 @@ SizeChanged += (sender, e) =>
 
         var printersRead = await ExcelService.ReadCmdbSheet(s.PrintersXlsxPath);
         MainViewModel.Instance.Printers.Clear();
-        
+
 foreach (var printer in printersRead)
 {
     MainViewModel.Instance.Printers.Add(printer);
@@ -217,10 +233,10 @@ foreach (var printer in printersRead)
 MainViewModel.Instance.UpdateFilteredPrinters();
 
 
-        _infosPrintersChargedCMDB.Text = $"{printersRead.Count} imprimantes chargée depuis {filePath}";
+        mainViewModel?.InfoList = $"{printersRead.Count} imprimantes chargée depuis {filePath}";
     }
 
-    private async void RefreshAllClick(object sender,RoutedEventArgs args)
+    private async void RefreshAllOnClick(object sender,RoutedEventArgs args)
     {
         await RefreshService.RefreshAll();
         //var printers = MainViewModel.Instance.Printers;
@@ -231,6 +247,3 @@ MainViewModel.Instance.UpdateFilteredPrinters();
         //}
     }
 }
-
-
-

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PrintTrack.Models;
@@ -25,4 +26,7 @@ public partial class Printer(
     [ObservableProperty] private string _concatenerLocation = concatenerLocation;
 
     [ObservableProperty] private string _status = status;
+
+    [ObservableProperty]
+    private ObservableCollection<ConsumableInfo> _consommables = [];
 }

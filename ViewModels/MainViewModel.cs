@@ -28,10 +28,10 @@ public partial class MainViewModel : ObservableObject
     private string? _filter = "Tous les sites"; 
 
     [ObservableProperty]
-    private double? _windowHeight;
+    private string _infoList ="";
 
     [ObservableProperty]
-    private double? _windowWidth;
+    private Printer? _selectedPrinter; 
 
     partial void OnFilterChanged(string? value)
     {
@@ -50,7 +50,15 @@ public partial class MainViewModel : ObservableObject
             {
                 FilteredPrinters.Add(printer);
             }
+
+            InfoList = $"{FilteredPrinters.Count} imprimantes selectionnées ";
+
         });
+    }
+
+    partial void OnSelectedPrinterChanged(Printer? value)
+    {
+        Console.WriteLine(value?.Numeroetiquette);
     }
 
     public void UpdateFilteredPrinters()
