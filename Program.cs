@@ -1,12 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data;
-using Avalonia.Markup.Declarative;
 using Avalonia.Themes.Fluent;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using PrintTrack.ViewModels;
 using PrintTrack.Views;
-using System;
 
 namespace PrintTrack;
 
@@ -16,7 +11,6 @@ class Program
     {
         AppBuilder.Configure<Application>()
                   .UsePlatformDetect()
-                  .UseHotReload()
                   .Start(AppMain, args);
     }
 

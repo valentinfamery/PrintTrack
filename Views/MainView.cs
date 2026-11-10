@@ -1,6 +1,3 @@
-using System;
-
-using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -9,18 +6,11 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Markup.Declarative;
 using Avalonia.Media;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using PrintTrack.Models;
 using PrintTrack.ViewModels;
 
-
-
-
 namespace PrintTrack.Views;
-
 
 public class MainView : UserControl
 {
@@ -30,7 +20,6 @@ public class MainView : UserControl
     private readonly Button _buttonChargerCMDB;
     private readonly Button _refreshAll;
     private readonly TableView _tableView;
-    private readonly ScrollViewer _scrollViewer2;
     private readonly TextBlock _infosPrintersChargedCMDB;
     private readonly ComboBox _comboBox;
 
@@ -41,21 +30,14 @@ public class MainView : UserControl
 
         var s = SettingsService.Load();
 
-
-
-
-
-
-
         _infosPrintersChargedCMDB = new TextBlock();
 
-        _infosPrintersChargedCMDB.Bind(TextBlock.TextProperty,new Binding(nameof(MainViewModel.InfoList)));
-
+        _infosPrintersChargedCMDB.Bind(TextBlock.TextProperty, new Binding(nameof(MainViewModel.InfoList)));
 
         _stackPanel = new StackPanel()
         {
             Spacing = 5,
-            Background = Brushes.GhostWhite,
+            //Background = Brushes.GhostWhite,
             Margin = new Thickness(10),
         };
 
@@ -72,7 +54,7 @@ public class MainView : UserControl
             Content = "ChargerCMDB",
         };
 
-        _buttonChargerCMDB.Click +=  LoadCMDBOnClick!;
+        _buttonChargerCMDB.Click += LoadCMDBOnClick!;
 
         _refreshAll = new Button()
         {
@@ -92,7 +74,11 @@ public class MainView : UserControl
 
 
 
-        _tableView = new TableView(){SelectionMode=SelectionMode.Single}.CanUserResizeColumns(false);
+        _tableView = new TableView()
+        {
+            SelectionMode = SelectionMode.Single,
+            CanUserResizeColumns = false
+        };
 
 
         _tableView.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(MainViewModel.FilteredPrinters)));
@@ -113,38 +99,38 @@ public class MainView : UserControl
     // Couleurs demandées pour les 4 cubes
     var colors = new[] { Colors.Black, Colors.Cyan, Colors.Magenta, Colors.Yellow };
 
-    if(item.Consommables.Any() != false)
-    // Exemple : supposons que `item.Pourcentages` soit un tableau/liste de 4 double (ex: [50, 20, 80, 10])
-    // Tu peux adapter la source de données selon tes besoins.
-    for (int i = 0; i < 4; i++)
-    {
-
-        Avalonia.Media.Color couleurFond = colors[i];
-
-        // Un cube (Border) contenant le texte du pourcentage
-        var cube = new Border
+    if (item.Consommables.Any() != false)
+        // Exemple : supposons que `item.Pourcentages` soit un tableau/liste de 4 double (ex: [50, 20, 80, 10])
+        // Tu peux adapter la source de données selon tes besoins.
+        for (int i = 0; i < 4; i++)
         {
-            Width = 40,
-            Height = 40,
-            Background = new SolidColorBrush(couleurFond),
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Child = new TextBlock
+
+            Avalonia.Media.Color couleurFond = colors[i];
+
+            // Un cube (Border) contenant le texte du pourcentage
+            var cube = new Border
             {
-                Text = item.Consommables[i].Name + item.Consommables[i].Percentage.ToString(),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                FontSize = 11,
-                FontWeight = FontWeight.Bold,
-                // Inverse la couleur du texte si le fond est noir pour qu'il reste lisible
-                Foreground = couleurFond == Colors.Black ? Brushes.White : Brushes.Black
-            }
-        };
+                Width = 40,
+                Height = 40,
+                Background = new SolidColorBrush(couleurFond),
+                BorderBrush = Brushes.Gray,
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(4),
+                Child = new TextBlock
+                {
+                    Text = item.Consommables[i].Name + item.Consommables[i].Percentage.ToString(),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = 11,
+                    FontWeight = FontWeight.Bold,
+                    // Inverse la couleur du texte si le fond est noir pour qu'il reste lisible
+                    Foreground = couleurFond == Colors.Black ? Brushes.White : Brushes.Black
+                }
+            };
 
 
-        row.Children.Add(cube);
-    }
+            row.Children.Add(cube);
+        }
 
 
 
@@ -154,22 +140,22 @@ public class MainView : UserControl
 
 
 
-        _tableView.Columns([
-            new TableViewColumn().Header("Site").Binding(new Binding(nameof(Printer.Site))).Width(new GridLength(200, GridUnitType.Pixel)),
-            new TableViewColumn().Header("AdresseIP").Binding(new Binding(nameof(Printer.AdresseIP))).Width(new GridLength(100, GridUnitType.Pixel)),
-            new TableViewColumn().Header("Numeroetiquette").Binding(new Binding(nameof(Printer.Numeroetiquette))).Width(new GridLength(100, GridUnitType.Pixel)),
-            new TableViewColumn().Header("Statut").Binding(new Binding(nameof(Printer.Status))).Width(new GridLength(100, GridUnitType.Pixel)),
-            new TableViewColumn().Header("Toner").CellTemplate(cellTemplate).Width(new GridLength(200, GridUnitType.Pixel)),
 
-            //new TableViewColumn().Header("Categorie").Binding(new Binding(nameof(Printer.Categorie))),
 
-            //new TableViewColumn().Header("Marque").Binding(new Binding(nameof(Printer.Marque))),
-            new TableViewColumn().Header("Modele").Binding(new Binding(nameof(Printer.Modele))).Width(new GridLength(100, GridUnitType.Pixel)),
-            new TableViewColumn().Header("Numserie").Binding(new Binding(nameof(Printer.Numserie))).Width(new GridLength(150, GridUnitType.Pixel)),
-            new TableViewColumn().Header("AdresseMAC").Binding(new Binding(nameof(Printer.AdresseMAC))).Width(new GridLength(150, GridUnitType.Pixel)),
-            new TableViewColumn().Header("ConcatenerLocation").Binding(new Binding(nameof(Printer.ConcatenerLocation))).Width(new GridLength(700, GridUnitType.Pixel)),
-        ]
-        );
+
+
+        _tableView.Columns.Clear();
+        _tableView.Columns.AddRange([
+          new TableViewColumn { Header = "Site", Binding = new Binding(nameof(Printer.Site)), Width = new GridLength(200, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "AdresseIP", Binding = new Binding(nameof(Printer.AdresseIP)), Width = new GridLength(100, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "Numeroetiquette", Binding = new Binding(nameof(Printer.Numeroetiquette)), Width = new GridLength(100, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "Statut", Binding = new Binding(nameof(Printer.Status)), Width = new GridLength(100, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "Toner", CellTemplate = cellTemplate, Width = new GridLength(200, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "Modele", Binding = new Binding(nameof(Printer.Modele)), Width = new GridLength(100, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "Numserie", Binding = new Binding(nameof(Printer.Numserie)), Width = new GridLength(150, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "AdresseMAC", Binding = new Binding(nameof(Printer.AdresseMAC)), Width = new GridLength(150, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "ConcatenerLocation", Binding = new Binding(nameof(Printer.ConcatenerLocation)), Width = new GridLength(700, GridUnitType.Pixel) }
+        ]);
 
 
         _tableView.Bind(TableView.SelectedItemProperty,new Binding(nameof(MainViewModel.SelectedPrinter)));
@@ -178,14 +164,7 @@ public class MainView : UserControl
 
 
 
-        _scrollViewer2 = new ScrollViewer()
-        {
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Visible,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
-            BorderBrush = Brushes.Black,
-            BorderThickness = new Thickness(2),
-            Content = new DetailView(),
-        };
+
 
 
 
@@ -194,14 +173,14 @@ SizeChanged += (sender, e) =>
     // Fixe la taille de l'élément à 60% de la largeur et 40% de la hauteur de la fenêtre
     _tableView.Width = e.NewSize.Width * 0.99;
     _tableView.Height = e.NewSize.Height * 0.4;
-    _scrollViewer2.Width = e.NewSize.Width * 0.99;
-    _scrollViewer2.Height = e.NewSize.Height * 0.4;
+    //_scrollViewer2.Width = e.NewSize.Width * 0.99;
+    //_scrollViewer2.Height = e.NewSize.Height * 0.4;
 };
 
 
-        _buttonPanel.Children(_buttonChargerCMDB,_refreshAll);
+        _buttonPanel.Children.AddRange([_buttonChargerCMDB,_refreshAll]);
 
-        _stackPanel.Children(_buttonPanel,_comboBox,_tableView,_scrollViewer2,_infosPrintersChargedCMDB);
+        _stackPanel.Children.AddRange([_buttonPanel, _comboBox, _tableView,new DetailView(), _infosPrintersChargedCMDB]);
 
         Content = _stackPanel;
     }
@@ -239,11 +218,5 @@ MainViewModel.Instance.UpdateFilteredPrinters();
     private async void RefreshAllOnClick(object sender,RoutedEventArgs args)
     {
         await RefreshService.RefreshAll();
-        //var printers = MainViewModel.Instance.Printers;
-
-        //foreach(var printer in printers)
-        //{
-            //printer.Status = "Modified";
-        //}
     }
 }

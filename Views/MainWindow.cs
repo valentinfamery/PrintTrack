@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Markup.Declarative;
 using PrintTrack.Views;
 using Avalonia.Platform;
 using System;
@@ -15,13 +14,12 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
-        // Using Avalonia.Markup.Declarative fluent property assignment
-                this.Title("PrintTrack")
-                    .Icon(new WindowIcon(AssetLoader.Open(new Uri("avares://PrintTrack/Assets/avalonia-logo.ico"))))
-                    .MinHeight(850)
-                    .MinWidth(1500)
-                    .WindowState(WindowState.Maximized)
-                    .Content(new MainView());
+        Title = "PrintTrack";
+        Icon = new WindowIcon(AssetLoader.Open(new Uri("avares://PrintTrack/Assets/avalonia-logo.ico")));
+        MinHeight = 850;
+        MinWidth = 1500;
+        WindowState = WindowState.Maximized;
+        Content = new MainView();
     }
 
 }

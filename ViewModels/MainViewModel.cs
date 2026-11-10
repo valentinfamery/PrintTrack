@@ -10,9 +10,9 @@ namespace PrintTrack.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    public static MainViewModel Instance { get; } = new MainViewModel(); 
+    public static MainViewModel Instance { get; } = new MainViewModel();
 
-    
+
     public List<Printer> Printers {get; set; } = [];
 
 
@@ -22,16 +22,16 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<string> _grandSites = [];
 
-    
+
 
     [ObservableProperty]
-    private string? _filter = "Tous les sites"; 
+    private string? _filter = "Tous les sites";
 
     [ObservableProperty]
     private string _infoList ="";
 
     [ObservableProperty]
-    private Printer? _selectedPrinter; 
+    private Printer? _selectedPrinter;
 
     partial void OnFilterChanged(string? value)
     {
@@ -39,7 +39,7 @@ public partial class MainViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
         Console.WriteLine(value);
-        
+
             FilteredPrinters.Clear();
 
             IEnumerable<Printer> printersToDisplay = string.IsNullOrEmpty(value) || value == "Tous les sites"
@@ -72,10 +72,5 @@ public partial class MainViewModel : ObservableObject
                 FilteredPrinters.Add(printer);
             }
         });
-    }
-
-    public MainViewModel()
-    {
-        
     }
 }
