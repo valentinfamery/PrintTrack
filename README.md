@@ -1,7 +1,7 @@
 # Print Track 
 
 ## 1. Prérequis
-  - net10.0 ([https://dotnet.microsoft.com/fr-fr/download/dotnet/10.0])
+  - net10.0 [https://dotnet.microsoft.com/fr-fr/download/dotnet/10.0](https://dotnet.microsoft.com/fr-fr/download/dotnet/10.0)
 
 ## 2. Installation
 
@@ -33,6 +33,6 @@ dotnet publish -c Release -r linux-x64
 dotnet publish -c Release -r win-x64
 ```
 
-Le logiciel est sous license opensource : (License)[https://github.com/valentinfamery/PrintTrack/blob/main/OIDS.md]
+Le logiciel est sous license open source : [LICENSE.md](LICENSE.md)
 
-Les OIDS utilisés par l'application sont issus de ce projet : [https://github.com/PaoloDSP/PrinterMonitor/blob/main/OIDS.md]
+Les OIDS utilisés par l'application sont issus de ce projet : [https://github.com/PaoloDSP/PrinterMonitor/blob/main/OIDS.md](https://github.com/PaoloDSP/PrinterMonitor/blob/main/OIDS.md)
