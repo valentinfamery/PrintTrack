@@ -33,6 +33,6 @@ dotnet publish -c Release -r linux-x64
 dotnet publish -c Release -r win-x64
 ```
 
-Le logiciel est sous license open source : [LICENSE.md](LICENSE.md)
+Il s'agit d'un logiciel libre et sans restriction, versé dans le domaine public. : [LICENSE.md](LICENSE.md)
 
 Les OIDS utilisés par l'application sont issus de ce projet : [https://github.com/PaoloDSP/PrinterMonitor/blob/main/OIDS.md](https://github.com/PaoloDSP/PrinterMonitor/blob/main/OIDS.md)
