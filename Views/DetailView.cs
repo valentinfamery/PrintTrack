@@ -19,7 +19,7 @@ public class DetailView : UserControl {
 
         _stackPanel.Children.AddRange([_textBlock]);
 
-        _textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(MainViewModel.SelectedPrinter.Numeroetiquette)));
+        _textBlock.Bind(TextBlock.TextProperty, new Binding("SelectedPrinter.Numeroetiquette"));
         Content = _stackPanel;
     }
 
