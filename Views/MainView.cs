@@ -172,7 +172,7 @@ SizeChanged += (sender, e) =>
 {
     // Fixe la taille de l'élément à 60% de la largeur et 40% de la hauteur de la fenêtre
     _tableView.Width = e.NewSize.Width * 0.99;
-    _tableView.Height = e.NewSize.Height * 0.4;
+    _tableView.Height = e.NewSize.Height * 0.8;
     //_scrollViewer2.Width = e.NewSize.Width * 0.99;
     //_scrollViewer2.Height = e.NewSize.Height * 0.4;
 };

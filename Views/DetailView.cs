@@ -7,19 +7,20 @@ namespace PrintTrack.Views;
 public class DetailView : UserControl {
 
     private readonly StackPanel _stackPanel;
-    private readonly TextBox _textBox;
+    private readonly TextBlock _textBlock;
 
     public DetailView() {
         DataContext = MainViewModel.Instance;
-        Content = _stackPanel;
+
 
         _stackPanel = new StackPanel();
 
-        _textBox = new TextBox(){Text = "DSP"};
+        _textBlock = new TextBlock(){Text = "DSP"};
 
-        _stackPanel.Children.AddRange([_textBox]);
+        _stackPanel.Children.AddRange([_textBlock]);
 
-        _textBox.Bind(TextBox.TextProperty,new Binding(nameof(MainViewModel.SelectedPrinter.Numeroetiquette)));
+        _textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(MainViewModel.SelectedPrinter.Numeroetiquette)));
+        Content = _stackPanel;
     }
 
 

@@ -17,21 +17,17 @@ public partial class MainViewModel : ObservableObject
 
 
     [ObservableProperty]
-    private ObservableCollection<Printer> _filteredPrinters = [];
-
+    public partial ObservableCollection<Printer> FilteredPrinters { get; set; } = [];
     [ObservableProperty]
-    private ObservableCollection<string> _grandSites = [];
-
+    public partial ObservableCollection<string> GrandSites { get; set; } = [];
 
 
     [ObservableProperty]
-    private string? _filter = "Tous les sites";
-
+    public partial string? Filter { get; set; } = "Tous les sites";
     [ObservableProperty]
-    private string _infoList ="";
-
+    public partial string InfoList { get; set; } = "";
     [ObservableProperty]
-    private Printer? _selectedPrinter;
+    public partial Printer? SelectedPrinter { get; set; }
 
     partial void OnFilterChanged(string? value)
     {
