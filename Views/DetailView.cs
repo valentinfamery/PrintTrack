@@ -15,7 +15,7 @@ public class DetailView : UserControl {
 
         _stackPanel = new StackPanel();
 
-        _textBlock = new TextBlock(){Text = "DSP"};
+        _textBlock = new TextBlock(){};
 
         _stackPanel.Children.AddRange([_textBlock]);
 

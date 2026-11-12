@@ -147,7 +147,7 @@ public class MainView : UserControl
         _tableView.Columns.Clear();
         _tableView.Columns.AddRange([
           new TableViewColumn { Header = "Site", Binding = new Binding(nameof(Printer.Site)), Width = new GridLength(200, GridUnitType.Pixel) },
-          new TableViewColumn { Header = "AdresseIP", Binding = new Binding(nameof(Printer.AdresseIP)), Width = new GridLength(100, GridUnitType.Pixel) },
+          new TableViewColumn { Header = "AdresseIP", Binding = new Binding(nameof(Printer.AdresseIP)), Width = new GridLength(150, GridUnitType.Pixel) },
           new TableViewColumn { Header = "Numeroetiquette", Binding = new Binding(nameof(Printer.Numeroetiquette)), Width = new GridLength(100, GridUnitType.Pixel) },
           new TableViewColumn { Header = "Statut", Binding = new Binding(nameof(Printer.Status)), Width = new GridLength(100, GridUnitType.Pixel) },
           new TableViewColumn { Header = "Toner", CellTemplate = cellTemplate, Width = new GridLength(200, GridUnitType.Pixel) },
