@@ -32,3 +32,7 @@ dotnet publish -c Release -r linux-x64
 ```
 dotnet publish -c Release -r win-x64
 ```
+
+Le logiciel est sous license opensource : (License)[https://github.com/valentinfamery/PrintTrack/blob/main/OIDS.md]
+
+Les OIDS utilisés par l'application sont issus de ce projet : [https://github.com/PaoloDSP/PrinterMonitor/blob/main/OIDS.md]
