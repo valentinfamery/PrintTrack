@@ -5,20 +5,10 @@ using Lextm.SharpSnmpLib;
 using Lextm.SharpSnmpLib.Messaging;
 
 public class SnmpService{
-    public SnmpService(){
+    public SnmpService()
+    {
 
     }
-
-    public static List<Variable> GetOperation(string ip){
-       var result = Messenger.Get(VersionCode.V2,
-                           new IPEndPoint(IPAddress.Parse(ip), 161),
-                           new OctetString("public"),
-                           [new Variable(new ObjectIdentifier("1.3.6.1.2.1.25.3.2.1.5.1"))],
-                           3000);
-       return (List<Variable>)result;
-    }
-
-
 
     public static List<Variable> BulkOperation(string ip){
 
@@ -73,7 +63,7 @@ public class SnmpService{
                                                           10,
                                                            bulkPdu
                                                           );
-ISnmpMessage response = message.GetResponse(1000, new IPEndPoint(IPAddress.Parse(ip), 161));
+ISnmpMessage response = message.GetResponse(3000, new IPEndPoint(IPAddress.Parse(ip), 161));
 
 var result = response.Pdu().Variables;
 
