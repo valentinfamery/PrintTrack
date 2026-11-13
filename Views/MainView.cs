@@ -99,7 +99,7 @@ public class MainView : UserControl
     // Couleurs demandées pour les 4 cubes
     var colors = new[] { Colors.Black, Colors.Cyan, Colors.Magenta, Colors.Yellow };
 
-    if (item.Consommables.Any() != false)
+    if (item.Consommables?.Any() == true)
         // Exemple : supposons que `item.Pourcentages` soit un tableau/liste de 4 double (ex: [50, 20, 80, 10])
         // Tu peux adapter la source de données selon tes besoins.
         for (int i = 0; i < 4; i++)
@@ -110,8 +110,8 @@ public class MainView : UserControl
             // Un cube (Border) contenant le texte du pourcentage
             var cube = new Border
             {
-                Width = 40,
-                Height = 40,
+                Width = 35,
+                Height = 35,
                 Background = new SolidColorBrush(couleurFond),
                 BorderBrush = Brushes.Gray,
                 BorderThickness = new Thickness(1),
@@ -158,7 +158,7 @@ public class MainView : UserControl
         ]);
 
 
-        _tableView.Bind(TableView.SelectedItemProperty,new Binding(nameof(MainViewModel.SelectedPrinter)));
+        _tableView.Bind(TableView.SelectedItemProperty, new Binding(nameof(MainViewModel.SelectedPrinter)));
 
 
 
@@ -168,19 +168,19 @@ public class MainView : UserControl
 
 
 
-SizeChanged += (sender, e) =>
-{
-    // Fixe la taille de l'élément à 60% de la largeur et 40% de la hauteur de la fenêtre
-    _tableView.Width = e.NewSize.Width * 0.99;
-    _tableView.Height = e.NewSize.Height * 0.8;
-    //_scrollViewer2.Width = e.NewSize.Width * 0.99;
-    //_scrollViewer2.Height = e.NewSize.Height * 0.4;
-};
+        SizeChanged += (sender, e) =>
+        {
+            // Fixe la taille de l'élément à 60% de la largeur et 40% de la hauteur de la fenêtre
+            _tableView.Width = e.NewSize.Width * 0.99;
+            _tableView.Height = e.NewSize.Height * 0.8;
+            //_scrollViewer2.Width = e.NewSize.Width * 0.99;
+            //_scrollViewer2.Height = e.NewSize.Height * 0.4;
+        };
 
 
-        _buttonPanel.Children.AddRange([_buttonChargerCMDB,_refreshAll]);
+        _buttonPanel.Children.AddRange([_buttonChargerCMDB, _refreshAll]);
 
-        _stackPanel.Children.AddRange([_buttonPanel, _comboBox, _tableView,new DetailView(), _infosPrintersChargedCMDB]);
+        _stackPanel.Children.AddRange([_buttonPanel, _comboBox, _tableView, new DetailView(), _infosPrintersChargedCMDB]);
 
         Content = _stackPanel;
     }
@@ -196,27 +196,38 @@ SizeChanged += (sender, e) =>
 
         var filePath = await StorageService.GetFilePathCMDB(topLevel!);
 
-        s.PrintersXlsxPath = filePath;
 
-        SettingsService.Save(s);
+        // VÉRIFICATION : Si aucun fichier n'a été sélectionné, on stoppe l'exécution
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
 
-        var printersRead = await ExcelService.ReadCmdbSheet(s.PrintersXlsxPath);
-        MainViewModel.Instance.Printers.Clear();
+            s.PrintersXlsxPath = filePath!;
 
-foreach (var printer in printersRead)
-{
-    MainViewModel.Instance.Printers.Add(printer);
-    //Console.WriteLine(printer.Numeroetiquette);
-}
+            SettingsService.Save(s);
 
-MainViewModel.Instance.UpdateFilteredPrinters();
+            var printersRead = await ExcelService.ReadCmdbSheet(s.PrintersXlsxPath);
+            MainViewModel.Instance.Printers.Clear();
 
 
-        mainViewModel?.InfoList = $"{printersRead.Count} imprimantes chargée depuis {filePath}";
+            foreach (var printer in printersRead)
+            {
+                MainViewModel.Instance.Printers.Add(printer);
+                //Console.WriteLine(printer.Numeroetiquette);
+            }
+
+            MainViewModel.Instance.UpdateFilteredPrinters();
+
+
+            mainViewModel?.InfoList = $"{printersRead.Count} imprimantes chargée depuis {filePath}";
+
     }
 
-    private async void RefreshAllOnClick(object sender,RoutedEventArgs args)
+    private async void RefreshAllOnClick(object sender, RoutedEventArgs args)
     {
         await RefreshService.RefreshAll();
     }
+
+
 }
