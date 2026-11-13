@@ -15,18 +15,36 @@ public partial class Printer(
     string concatenerLocation,
     string status) : ObservableObject
 {
-    [ObservableProperty] private string  _site = grandSite;
-    [ObservableProperty] private string _categorie = categorie;
-    [ObservableProperty] private string _adresseIP = adresseIP;
-    [ObservableProperty] private string _numeroetiquette = numeroetiquette;
-    [ObservableProperty] private string _marque = marque;
-    [ObservableProperty] private string _modele = modele;
-    [ObservableProperty] private string _numserie = numserie;
-    [ObservableProperty] private string _adresseMAC = adresseMAC;
-    [ObservableProperty] private string _concatenerLocation = concatenerLocation;
-
-    [ObservableProperty] private string _status = status;
+    [ObservableProperty]
+    public partial string Site { get; set; } = grandSite;
 
     [ObservableProperty]
-    private ObservableCollection<ConsumableInfo> _consommables = [];
+    public partial string Categorie { get; set; } = categorie;
+
+    [ObservableProperty]
+    public partial string AdresseIP { get; set; } = adresseIP;
+
+    [ObservableProperty]
+    public partial string Numeroetiquette { get; set; } = numeroetiquette;
+
+    [ObservableProperty]
+    public partial string Marque { get; set; } = marque;
+
+    [ObservableProperty]
+    public partial string Modele { get; set; } = modele;
+
+    [ObservableProperty]
+    public partial string Numserie { get; set; } = numserie;
+
+    [ObservableProperty]
+    public partial string AdresseMAC { get; set; } = adresseMAC;
+
+    [ObservableProperty]
+    public partial string ConcatenerLocation { get; set; } = concatenerLocation;
+
+    [ObservableProperty]
+    public partial string Status { get; set; } = status;
+
+    [ObservableProperty]
+    public partial ObservableCollection<ConsumableInfo> Consommables { get; set; } = [];
 }

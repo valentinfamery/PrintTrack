@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -92,8 +93,10 @@ public class MainView : UserControl
     var row = new StackPanel
     {
         Orientation = Orientation.Horizontal,
-        //Spacing = 6,
-        //Margin = new Thickness(4)
+        HorizontalAlignment = HorizontalAlignment.Center,
+        VerticalAlignment = VerticalAlignment.Center,
+        Width = 200,
+        Spacing = 7,
     };
 
     // Couleurs demandées pour les 4 cubes
@@ -110,15 +113,15 @@ public class MainView : UserControl
             // Un cube (Border) contenant le texte du pourcentage
             var cube = new Border
             {
-                Width = 35,
-                Height = 35,
+                Width = 40,
+                Height = 20,
                 Background = new SolidColorBrush(couleurFond),
                 BorderBrush = Brushes.Gray,
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(4),
                 Child = new TextBlock
                 {
-                    Text = item.Consommables[i].Name + item.Consommables[i].Percentage.ToString(),
+                    Text = item.Consommables[i].Percentage.ToString() + "%",
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                     FontSize = 11,

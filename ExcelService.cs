@@ -11,7 +11,6 @@ using static DocumentFormat.OpenXml.Packaging.SpreadsheetDocument;
 
 public class ExcelService{
 
-    
     public ExcelService(){
 
     }
@@ -47,58 +46,86 @@ public class ExcelService{
 
             SharedStringTablePart? sstPart = workbookPart.SharedStringTablePart;
             SharedStringTable? sst = sstPart?.SharedStringTable;
-
-            
             // Parcourt les lignes en ignorant la première (en-tête)
-        foreach (Row row in sheetData.Elements<Row>().Skip(1))
-        {
-            // Récupération sous forme de dictionnaire ou tableau ordonné
-            var cells = row.Elements<Cell>().ToList();
-            if (cells.Count == 0) continue;
+            foreach (Row row in sheetData.Elements<Row>().Skip(1))
+            {
+                // Récupération sous forme de dictionnaire ou tableau ordonné
+                var cells = row.Elements<Cell>().ToList();
+                if (cells.Count == 0) continue;
 
-            // Exemple de mapping basé sur l'index des colonnes :
-            // Colonne 0 (A) = Nom/IP, Colonne 1 (B) = Modèle, Colonne 2 (C) = Emplacement...
-            string GrandSite = GetCellValue(cells.ElementAtOrDefault(0), sst);
-            string Categorie = GetCellValue(cells.ElementAtOrDefault(2), sst);
-            string AdresseIP = GetCellValue(cells.ElementAtOrDefault(3), sst);
-            string Numeroetiquette = GetCellValue(cells.ElementAtOrDefault(4), sst);
-            string Marque = GetCellValue(cells.ElementAtOrDefault(5), sst);
-            string Modele = GetCellValue(cells.ElementAtOrDefault(6), sst);
-            string Numserie = GetCellValue(cells.ElementAtOrDefault(7), sst);
-            string AdresseMAC = GetCellValue(cells.ElementAtOrDefault(8), sst);
-            string ConcatenerLocation = GetCellValue(cells.ElementAtOrDefault(12), sst);
+                // Exemple de mapping basé sur l'index des colonnes :
+                // Colonne 0 (A) = Nom/IP, Colonne 1 (B) = Modèle, Colonne 2 (C) = Emplacement...
+                string GrandSite = GetCellValue(cells.ElementAtOrDefault(0), sst);
+                string Categorie = GetCellValue(cells.ElementAtOrDefault(2), sst);
+                string AdresseIP = GetCellValue(cells.ElementAtOrDefault(3), sst);
+                string Numeroetiquette = GetCellValue(cells.ElementAtOrDefault(4), sst);
+                string Marque = GetCellValue(cells.ElementAtOrDefault(5), sst);
+                string Modele = GetCellValue(cells.ElementAtOrDefault(6), sst);
+                string Numserie = GetCellValue(cells.ElementAtOrDefault(7), sst);
+                string AdresseMAC = GetCellValue(cells.ElementAtOrDefault(8), sst);
+                string ConcatenerLocation = GetCellValue(cells.ElementAtOrDefault(12), sst);
 
-            // Ignore les lignes vides si nécessaire
-            if (string.IsNullOrWhiteSpace(GrandSite) && string.IsNullOrWhiteSpace(AdresseIP))
-                continue;
+                // Ignore les lignes vides si nécessaire
+                if (string.IsNullOrWhiteSpace(GrandSite) && string.IsNullOrWhiteSpace(AdresseIP))
+                    continue;
 
-            string ipHost = AdresseIP.Replace("https://", "");
+                string ipHost = AdresseIP.Replace("https://", "");
 
-            //Console.WriteLine(ipHost);
+                //Console.WriteLine(ipHost);
 
-            // Instanciation et ajout de l'imprimante
-            Printer printer = new(
-                GrandSite,
-                Categorie,
-                ipHost,
-                Numeroetiquette,
-                Marque,
-                Modele,
-                Numserie,
-                AdresseMAC,
-                ConcatenerLocation,
-                ""
-            );
+                // Instanciation et ajout de l'imprimante
+                Printer printer = new(
+                    GrandSite,
+                    Categorie,
+                    ipHost,
+                    Numeroetiquette,
+                    Marque,
+                    Modele,
+                    Numserie,
+                    AdresseMAC,
+                    ConcatenerLocation,
+                    ""
+                );
 
-            //Console.WriteLine(printer.Numeroetiquette.ToString());
+                //Console.WriteLine(printer.Numeroetiquette.ToString());
 
-            if (AdresseIP != "RETIRE" && AdresseIP != "COLIMO" && AdresseIP != "HORS RESEAU"){
+                if (AdresseIP != "RETIRE" && AdresseIP != "COLIMO" && AdresseIP != "HORS RESEAU")
+                {
 
-            printers.Add(printer);
+                    printers.Add(printer);
+
+                }
 
             }
 
-        }
+            #if DEBUG
+            var consumables = new ObservableCollection<ConsumableInfo>
+            {
+                new() { Name = "Cyan", CurrentLevel = 450, MaxCapacity = 1000, Percentage = 45 },
+                new() { Name = "Magenta", CurrentLevel = 80, MaxCapacity = 1000, Percentage = 8 },
+                new() { Name = "Yellow", CurrentLevel = 900, MaxCapacity = 1000, Percentage = 90 },
+                new() { Name = "Black", CurrentLevel = 120, MaxCapacity = 1500, Percentage = 8 }
+            };
+
+            var myPrinter = new PrintTrack.Models.Printer(
+                grandSite: "Site Principal - Bâtiment A",
+                categorie: "Laser Couleur",
+                adresseIP: "192.168.1.50",
+                numeroetiquette: "TAG-99482",
+                marque: "HP",
+                modele: "Color LaserJet Pro",
+                numserie: "CNB8H12345",
+                adresseMAC: "00:11:22:33:44:55",
+                concatenerLocation: "BatA-RDC-Bureau102",
+                status: "En ligne"
+            )
+            {
+                Consommables = consumables
+            };
+
+            printers.Add(myPrinter);
+            #endif
+
 
             List<string>? siteList = [.. printers
             .Select(p => p.Site)
@@ -115,18 +142,18 @@ public class ExcelService{
                 //Console.WriteLine(site);
             }
 
-        
+
 
 
             return printers;
         }
 
-        
+
     }
 
     private static string GetCellValue(Cell? cell, SharedStringTable? sst)
 {
-    if (cell == null || cell.CellValue == null) 
+    if (cell == null || cell.CellValue == null)
         return string.Empty;
 
     string value = cell.CellValue.Text;
